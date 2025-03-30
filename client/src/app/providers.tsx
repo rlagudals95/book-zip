@@ -1,4 +1,5 @@
 'use client';
+import { ModalProvider } from "@/shared/providers/modal-provider";
 import { ReactNode } from "react";
 
 interface ProvidersProps {
@@ -7,8 +8,8 @@ interface ProvidersProps {
 
 export const Providers = ({ children }: ProvidersProps) => {
   return (
-    <>
+    <ModalProvider>
       {children}
-    </>
+    </ModalProvider>
   );
 }; 
