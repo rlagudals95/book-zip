@@ -1,0 +1,1 @@
+export { SummaryDetailPage } from './ui/SummaryDetailPage'; 
