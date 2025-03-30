@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { SummaryModule } from './summary/summary.module';
 import { HealthModule } from './health/health.module';
+import { SubscribersModule } from './subscriber/subscriber.mobule';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,6 +33,7 @@ import { HealthModule } from './health/health.module';
     BooksModule,
     SummaryModule,
     HealthModule,
+    SubscribersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
