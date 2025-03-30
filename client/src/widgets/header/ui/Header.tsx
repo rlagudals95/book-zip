@@ -12,7 +12,7 @@ export const Header = ({  }: HeaderProps) => {
 
   return (
     <header className="border-b">
-      <div className="container mx-auto py-4 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
           매일 Book Zip
         </Link>

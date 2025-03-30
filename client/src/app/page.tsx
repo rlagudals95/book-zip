@@ -20,9 +20,7 @@ export default function Home() {
               관심사에 맞는 독서를 매일 구독해서 요약본으로 받아볼 수 있는 서비스입니다.
               바쁜 일상 속에서도 책의 핵심만 쏙쏙 챙겨가세요.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <SubscriptionButton />
-            </div>
+            <SubscriptionButton />
           </div>
         </div>
       </section>
