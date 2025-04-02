@@ -37,14 +37,6 @@ export class Book {
   @ApiProperty({ description: '출판 연도' })
   @Prop()
   publishYear: number;
-
-  @ApiProperty({ description: '페이지 수' })
-  @Prop()
-  pageCount: number;
-
-  @ApiProperty({ description: 'ISBN' })
-  @Prop({ unique: true })
-  isbn: string;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

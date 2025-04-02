@@ -13,6 +13,8 @@ import { BooksModule } from './books/books.module';
 import { SummaryModule } from './summary/summary.module';
 import { HealthModule } from './health/health.module';
 import { SubscribersModule } from './subscriber/subscriber.mobule';
+import { BookBatchModule } from './book-batch/book-batch.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +36,7 @@ import { SubscribersModule } from './subscriber/subscriber.mobule';
     SummaryModule,
     HealthModule,
     SubscribersModule,
+    BookBatchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
