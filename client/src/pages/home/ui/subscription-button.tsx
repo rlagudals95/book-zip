@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { requestVerification, verifyEmail, subscribe } from "@/shared/api/email";
 import { CustomError } from "@/shared/error/Error";
+import { Interest } from "@/entities/interest/model/types";
 
 // 스키마 정의
 const emailSchema = z.object({
@@ -34,11 +35,11 @@ const subscriptionFormSchema = z.object({
 });
 
 // 관심사 옵션
-const interestsOptions = [
-  { id: "self-improvement", label: "자기계발" },
-  { id: "business", label: "마케팅" },
-  { id: "startup", label: "스타트업" },
-  { id: "it", label: "IT" },
+const interestsOptions: { id: Interest; label: string }[] = [
+  { id: 'self-improvement', label: '자기계발' },
+  { id: 'business', label: '마케팅' },
+  { id: 'startup', label: '스타트업' },
+  { id: 'it', label: 'IT' },
 ];
 
 // 이메일 입력 단계 컴포넌트

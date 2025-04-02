@@ -1,5 +1,1 @@
-export interface Interest {
-  id: string;
-  name: string;
-  label: string;
-} 
+export type Interest = 'self-improvement' | 'business' | 'startup' | 'it';
