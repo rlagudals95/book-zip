@@ -22,7 +22,7 @@ export const requestVerification = async (email: string) => {
   
   export const verifyEmail = async (email: string, code: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscribers/verify-email`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/email/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
