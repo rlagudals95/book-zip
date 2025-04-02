@@ -9,10 +9,12 @@ export class EmailService {
 
   constructor(private configService: ConfigService) {
     this.transporter = nodemailer.createTransport({
-      service: configService.get<string>('EMAIL_SERVICE'),
+      host: this.configService.get('EMAIL_HOST'),
+      port: this.configService.get('EMAIL_PORT'),
+      secure: false,
       auth: {
-        user: configService.get<string>('EMAIL_USER'),
-        pass: configService.get<string>('EMAIL_PASSWORD'),
+        user: this.configService.get('EMAIL_USER'),
+        pass: this.configService.get('EMAIL_PASS'),
       },
     });
   }
@@ -60,5 +62,34 @@ export class EmailService {
     `;
 
     return this.sendMail(to, subject, html);
+  }
+
+  async sendVerificationCode(
+    email: string,
+    verificationCode: string,
+  ): Promise<boolean> {
+    try {
+      await this.transporter.sendMail({
+        from: `"매일 Book Zip" <${this.configService.get('EMAIL_USER')}>`,
+        to: email,
+        subject: '[매일 Book Zip] 이메일 인증 코드',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #333;">매일 Book Zip 이메일 인증</h2>
+            <p>안녕하세요, 매일 Book Zip 서비스 이용을 위한 인증 코드입니다.</p>
+            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;">
+              <h3 style="margin: 0; font-size: 24px;">${verificationCode}</h3>
+            </div>
+            <p>위 코드를 인증 화면에 입력하여 이메일 인증을 완료해주세요.</p>
+            <p>이 코드는 10분 동안 유효합니다.</p>
+            <p>본인이 요청하지 않은 경우 이 메일을 무시해주세요.</p>
+          </div>
+        `,
+      });
+      return true;
+    } catch (error) {
+      console.error('이메일 전송 실패:', error);
+      return false;
+    }
   }
 }
