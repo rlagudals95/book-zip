@@ -1,4 +1,5 @@
 import { IsEmail, IsArray, IsOptional } from 'class-validator';
+import { Interest } from '../types';
 
 export class CreateSubscriberDto {
   @IsEmail()
@@ -6,5 +7,5 @@ export class CreateSubscriberDto {
 
   @IsArray()
   @IsOptional()
-  interests?: string[];
+  interests?: Interest[];
 }
