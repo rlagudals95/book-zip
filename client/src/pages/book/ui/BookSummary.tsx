@@ -8,6 +8,7 @@ interface BookSummaryProps {
   keyPoints?: string[];
 }
 
+
 const BookSummary: React.FC<BookSummaryProps> = ({ summary, keyPoints }) => {
   if (!summary && (!keyPoints || keyPoints.length === 0)) return null;
 
@@ -30,23 +31,25 @@ const BookSummary: React.FC<BookSummaryProps> = ({ summary, keyPoints }) => {
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeHighlight]}
             components={{
-              h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-6 mb-4 text-blue-700" {...props} />,
-              h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-5 mb-3 text-blue-600" {...props} />,
-              h3: ({node, ...props}) => <h3 className="text-lg font-bold mt-4 mb-2 text-blue-600" {...props} />,
-              p: ({node, ...props}) => <p className="my-3 text-gray-700" {...props} />,
-              ul: ({node, ...props}) => <ul className="my-3 pl-6 list-disc" {...props} />,
-              ol: ({node, ...props}) => <ol className="my-3 pl-6 list-decimal" {...props} />,
-              li: ({node, ...props}) => <li className="my-1" {...props} />,
-              blockquote: ({node, ...props}) => (
+              h1: (props) => <h1 className="text-2xl font-bold mt-6 mb-4 text-blue-700" {...props} />,
+              h2: (props) => <h2 className="text-xl font-bold mt-5 mb-3 text-blue-600" {...props} />,
+              h3: (props) => <h3 className="text-lg font-bold mt-4 mb-2 text-blue-600" {...props} />,
+              p: (props) => <p className="my-3 text-gray-700" {...props} />,
+              ul: (props) => <ul className="my-3 pl-6 list-disc" {...props} />,
+              ol: (props) => <ol className="my-3 pl-6 list-decimal" {...props} />,
+              li: (props) => <li className="my-1" {...props} />,
+              blockquote: (props) => (
                 <blockquote className="border-l-4 border-blue-300 pl-4 py-1 my-4 bg-blue-50 rounded italic" {...props} />
               ),
-              code: ({node, inline, className, children, ...props}) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              code: (props: any) => {
+                const { inline, children, ...rest } = props;
                 if (inline) {
-                  return <code className="bg-blue-50 text-blue-800 px-1 py-0.5 rounded text-sm font-mono" {...props}>{children}</code>;
+                  return <code className="bg-blue-50 text-blue-800 px-1 py-0.5 rounded text-sm font-mono" {...rest}>{children}</code>;
                 }
                 return (
                   <pre className="bg-gray-800 text-gray-100 rounded-md p-4 my-4 overflow-auto">
-                    <code className="font-mono text-sm" {...props}>{children}</code>
+                    <code className="font-mono text-sm" {...rest}>{children}</code>
                   </pre>
                 );
               }
@@ -76,10 +79,10 @@ const BookSummary: React.FC<BookSummaryProps> = ({ summary, keyPoints }) => {
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
-                      p: ({node, ...props}) => <p className="my-1" {...props} />,
-                      strong: ({node, ...props}) => <strong className="font-bold text-blue-700" {...props} />,
-                      em: ({node, ...props}) => <em className="text-indigo-600" {...props} />,
-                      a: ({node, ...props}) => <a className="text-blue-600 hover:underline" {...props} />
+                      p: (props) => <p className="my-1" {...props} />,
+                      strong: (props) => <strong className="font-bold text-blue-700" {...props} />,
+                      em: (props) => <em className="text-indigo-600" {...props} />,
+                      a: (props) => <a className="text-blue-600 hover:underline" {...props} />
                     }}
                   >
                     {point}
