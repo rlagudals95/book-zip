@@ -6,7 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Header } from "@/widgets/header";
-import { BookSummary } from "@/entities/summary";
+import { BookSummary } from "@/entities/book/model/types";
+
 
 // 임시 데이터 - 실제로는 API에서 가져옵니다
 const SUMMARIES: BookSummary[] = [
@@ -128,12 +129,12 @@ const SUMMARIES: BookSummary[] = [
   }
 ];
 
-interface SummaryDetailPageProps {
-  summaryId: string;
+interface BookDetailPageProps {
+  bookId: string;
 }
 
-export default function SummaryDetailPage({ summaryId }: SummaryDetailPageProps) {
-  const [summary, setSummary] = useState<BookSummary | null>(null);
+export default function BookDetailPage({ bookId }: BookDetailPageProps) {
+  const [book, setBook] = useState<BookSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -142,9 +143,9 @@ export default function SummaryDetailPage({ summaryId }: SummaryDetailPageProps)
     const fetchData = () => {
       setIsLoading(true);
       try {
-        const foundSummary = SUMMARIES.find(item => item.id === summaryId);
-        if (foundSummary) {
-          setSummary(foundSummary);
+        const foundBook = SUMMARIES.find(item => item.id === bookId);
+        if (foundBook) {
+          setBook(foundBook);
         } else {
           toast.error("요약본을 찾을 수 없습니다");
           router.push("/dashboard");
@@ -158,7 +159,7 @@ export default function SummaryDetailPage({ summaryId }: SummaryDetailPageProps)
     };
 
     fetchData();
-  }, [summaryId, router]);
+  }, [bookId, router]);
 
   if (isLoading) {
     return (
@@ -168,7 +169,7 @@ export default function SummaryDetailPage({ summaryId }: SummaryDetailPageProps)
     );
   }
 
-  if (!summary) {
+  if (!book) {
     return (
       <div className="container mx-auto py-10 flex flex-col justify-center items-center min-h-screen">
         <h1 className="text-2xl font-bold mb-4">요약본을 찾을 수 없습니다</h1>
@@ -197,21 +198,21 @@ export default function SummaryDetailPage({ summaryId }: SummaryDetailPageProps)
               <CardContent className="p-6">
                 <div className="relative aspect-[3/4] w-full mb-4 rounded-md overflow-hidden">
                   <Image
-                    src={summary.coverImage}
-                    alt={summary.title}
+                    src={book.coverImage}
+                    alt={book.title}
                     fill
                     className="object-cover"
                   />
                 </div>
-                <h1 className="text-xl font-bold mb-1">{summary.title}</h1>
-                <p className="text-muted-foreground mb-4">{summary.author}</p>
+                <h1 className="text-xl font-bold mb-1">{book.title}</h1>
+                <p className="text-muted-foreground mb-4">{book.author}</p>
                 
                 <div className="text-sm space-y-2 border-t pt-4 mt-4">
-                  <p><span className="font-medium">발행연도:</span> {summary.publishedYear}년</p>
-                  <p><span className="font-medium">요약 일자:</span> {summary.date}</p>
-                  <p><span className="font-medium">읽는 시간:</span> {summary.readingTime}</p>
+                  <p><span className="font-medium">발행연도:</span> {book.publishedYear}년</p>
+                  <p><span className="font-medium">요약 일자:</span> {book.date}</p>
+                  <p><span className="font-medium">읽는 시간:</span> {book.readingTime}</p>
                   <div className="flex flex-wrap mt-4 gap-2">
-                    {summary.categories.map((category: string, index: number) => (
+                    {book.categories.map((category: string, index: number) => (
                       <span key={index} className="bg-primary/10 text-primary px-2 py-1 text-xs rounded-full">
                         {category}
                       </span>
@@ -236,7 +237,7 @@ export default function SummaryDetailPage({ summaryId }: SummaryDetailPageProps)
           {/* 요약 내용 */}
           <div className="md:col-span-2">
             <article className="prose max-w-none prose-a:text-primary prose-headings:text-foreground">
-              <div dangerouslySetInnerHTML={{ __html: summary.content }} />
+              <div dangerouslySetInnerHTML={{ __html: book.content }} />
             </article>
 
             <div className="border-t mt-10 pt-8">

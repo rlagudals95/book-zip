@@ -1,0 +1,1 @@
+export const SERVICE_NAME = "매일 Book Zip"

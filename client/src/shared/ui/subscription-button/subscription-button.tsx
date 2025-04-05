@@ -16,9 +16,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { requestVerification, verifyEmail, subscribe } from "@/shared/api/email";
+
 import { CustomError } from "@/shared/error/Error";
 import { Interest } from "@/entities/interest/model/types";
+import { requestVerification, subscribe, verifyEmail } from "@/entities/subscription/api/subscription.client";
+import { SERVICE_NAME } from "@/shared/const";
 
 // 스키마 정의
 const emailSchema = z.object({
@@ -253,7 +255,7 @@ const SubscriptionFlow = ({ onSuccess }: { onSuccess: () => void }) => {
   const handleEmailSubmit = async (emailValue: string) => {
     setIsLoading(true);
     try {
-      console.log(process.env.NEXT_PUBLIC_API_URL)
+  
       await requestVerification(emailValue);
       setEmail(emailValue);
       setStep('verification');
@@ -302,6 +304,7 @@ const SubscriptionFlow = ({ onSuccess }: { onSuccess: () => void }) => {
       toast.success("구독이 완료되었습니다!");
       onSuccess();
     } catch (error) {
+
       toast.error(error instanceof CustomError ? error.message : "구독 처리 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
@@ -340,7 +343,7 @@ export const SubscriptionButton = () => {
     openModal(
       <SubscriptionFlow onSuccess={closeModal} />,
       {
-        title: "매일 Book Zip 구독하기",
+        title: `${SERVICE_NAME} 구독하기`,
         description: "책 요약본을 이메일로 받아보세요",
       }
     );

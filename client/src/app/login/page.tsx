@@ -11,6 +11,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_NAME } from "@/shared/const";
 
 const loginSchema = z.object({
   email: z.string().email({
@@ -60,7 +61,7 @@ export default function LoginPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">로그인</CardTitle>
           <CardDescription className="text-center">
-            매일 Book Zip에 다시 오신 것을 환영합니다!
+            {SERVICE_NAME}에 다시 오신 것을 환영합니다!
           </CardDescription>
         </CardHeader>
         <CardContent>

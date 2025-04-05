@@ -38,6 +38,9 @@ dependencies:
   framer-motion:
     specifier: ^12.6.2
     version: 12.6.2(react-dom@19.1.0)(react@19.1.0)
+  ky:
+    specifier: ^1.8.0
+    version: 1.8.0
   lucide-react:
     specifier: ^0.485.0
     version: 0.485.0(react@19.1.0)
@@ -3009,6 +3012,11 @@ packages:
     dependencies:
       json-buffer: 3.0.1
     dev: true
+
+  /ky@1.8.0:
+    resolution: {integrity: sha512-DoKGmG27nT8t/1F9gV8vNzggJ3mLAyD49J8tTMWHeZvS8qLc7GlyTieicYtFzvDznMe/q2u38peOjkWc5/pjvw==}
+    engines: {node: '>=18'}
+    dev: false
 
   /language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}

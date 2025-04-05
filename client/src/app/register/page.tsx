@@ -12,6 +12,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_NAME } from "@/shared/const";
 
 const registerSchema = z.object({
   name: z.string().min(2, {
@@ -69,7 +70,7 @@ export default function RegisterPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">회원가입</CardTitle>
           <CardDescription className="text-center">
-            매일 Book Zip에 오신 것을 환영합니다!
+            {SERVICE_NAME}에 오신 것을 환영합니다!
           </CardDescription>
         </CardHeader>
         <CardContent>
