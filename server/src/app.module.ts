@@ -8,7 +8,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { EmailModule } from './email/email.module';
 
 import { HealthModule } from './health/health.module';
-import { SubscribersModule } from './subscriber/subscriber.mobule';
+import { SubscribersModule } from './subscriber/subscriber.module';
+import { BookModule } from './book/book.module';
 
 @Module({
   imports: [
@@ -24,9 +25,11 @@ import { SubscribersModule } from './subscriber/subscriber.mobule';
       inject: [ConfigService],
     }),
     ScheduleModule.forRoot(),
+
     EmailModule,
     HealthModule,
     SubscribersModule,
+    BookModule,
   ],
   controllers: [AppController],
   providers: [AppService],
