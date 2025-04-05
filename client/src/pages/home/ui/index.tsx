@@ -1,7 +1,7 @@
-import { SubscriptionButton } from "@/shared/ui/subscription-button/subscription-button";
 import Layout from "@/widgets/layout/ui/Layout";
+import { SubscriptionButton } from "../../../shared/ui/subscription-button/subscription-button";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <Layout>
       {/* 히어로 섹션 */}
@@ -65,5 +65,5 @@ export default function Home() {
         </div>
       </section>
     </Layout>
-  );
+  )
 }

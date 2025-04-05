@@ -132,7 +132,7 @@ interface SummaryDetailPageProps {
   summaryId: string;
 }
 
-export const SummaryDetailPage = ({ summaryId }: SummaryDetailPageProps) => {
+export default function SummaryDetailPage({ summaryId }: SummaryDetailPageProps) {
   const [summary, setSummary] = useState<BookSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();

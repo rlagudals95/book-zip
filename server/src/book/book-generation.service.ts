@@ -23,8 +23,7 @@ export class BookGenerationService {
   /**
    * 매일 새벽 1시에 실행되는 책 요약 생성 작업
    */
-  //@Cron(CronExpression.EVERY_DAY_AT_1AM)
-  @Cron('* * * * *')
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
   async generateDailyBookSummary() {
     if (this.isProcessing) {
       this.logger.warn('이미 책 요약 생성 작업이 실행 중입니다');
