@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 export default async function BookDetail({ params }: { params: { id: string } }) {
 
-  const { id } = params;
+  const { id } = await params;
 
   if (!id) {
     notFound();
