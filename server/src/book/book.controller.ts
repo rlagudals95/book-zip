@@ -11,13 +11,22 @@ export class BookController {
   ) {}
 
   @Get()
-  async findAll(@Query('summarized') summarized?: string) {
+  async findAll(
+    @Query('summarized') summarized?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNumber = page ? parseInt(page, 10) : 1;
+    const pageSize = limit ? parseInt(limit, 10) : 10;
+
+    // 페이지네이션 적용
     if (summarized === 'true') {
-      return this.bookService.findSummarizedBooks();
+      return this.bookService.findSummarizedBooks(pageNumber, pageSize);
     } else if (summarized === 'false') {
-      return this.bookService.findUnsummarizedBooks();
+      return this.bookService.findUnsummarizedBooks(pageNumber, pageSize);
     }
-    return this.bookService.findAll();
+
+    return this.bookService.findAll(pageNumber, pageSize);
   }
 
   @Get(':id')

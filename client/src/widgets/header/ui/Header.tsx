@@ -17,12 +17,13 @@ export const Header = ({  }: HeaderProps) => {
           매일 Book Zip
         </Link>
         <nav className="flex gap-4 items-center">
-          {/* <Link 
-            href="/dashboard" 
+          <Link 
+            href="/book" 
             className={ "font-medium text-primary"}
           >
-            대시보드
+            책목록
           </Link>
+          {/* 
           <Link 
             href="/library" 
             className={"font-medium text-primary"}

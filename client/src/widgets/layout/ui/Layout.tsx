@@ -36,7 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div>
               <h3 className="text-lg font-bold mb-4">연락처</h3>
               <p className="text-muted-foreground mb-2">이메일: dbfudgudals95@gmail.com</p>
-              <p className="text-muted-foreground mb-4">전화: 010-1234-5678</p>
+              <p className="text-muted-foreground mb-4">전화: 010-5485-9059</p>
               {/* <div className="flex gap-4 justify-center md:justify-start">
                 <a href="#" aria-label="페이스북" className="text-muted-foreground hover:text-foreground">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>

@@ -23,7 +23,10 @@ async function bootstrap() {
   );
 
   // CORS 설정
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
 
   // Swagger 설정
   const config = new DocumentBuilder()

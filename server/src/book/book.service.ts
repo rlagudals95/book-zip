@@ -10,26 +10,74 @@ export class BookService {
     @InjectModel('Book') private readonly bookModel: Model<BookDocument>,
   ) {}
 
-  async findAll() {
-    return this.bookModel.find().exec();
+  async findAll(page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+
+    const [items, totalItems] = await Promise.all([
+      this.bookModel
+        .find()
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+        .exec(),
+      this.bookModel.countDocuments().exec(),
+    ]);
+
+    return {
+      items,
+      totalItems,
+      page,
+      totalPages: Math.ceil(totalItems / limit),
+      itemsPerPage: limit,
+    };
   }
 
   async findById(id: string) {
     return this.bookModel.findById(id).exec();
   }
 
-  async findUnsummarizedBooks() {
-    return this.bookModel
-      .find({ isSummarized: false })
-      .sort({ createdAt: 1 })
-      .exec();
+  async findUnsummarizedBooks(page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+
+    const [items, totalItems] = await Promise.all([
+      this.bookModel
+        .find({ isSummarized: false })
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: 1 })
+        .exec(),
+      this.bookModel.countDocuments({ isSummarized: false }).exec(),
+    ]);
+
+    return {
+      items,
+      totalItems,
+      page,
+      totalPages: Math.ceil(totalItems / limit),
+      itemsPerPage: limit,
+    };
   }
 
-  async findSummarizedBooks() {
-    return this.bookModel
-      .find({ isSummarized: true })
-      .sort({ summarizedAt: -1 })
-      .exec();
+  async findSummarizedBooks(page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+
+    const [items, totalItems] = await Promise.all([
+      this.bookModel
+        .find({ isSummarized: true })
+        .skip(skip)
+        .limit(limit)
+        .sort({ summarizedAt: -1 })
+        .exec(),
+      this.bookModel.countDocuments({ isSummarized: true }).exec(),
+    ]);
+
+    return {
+      items,
+      totalItems,
+      page,
+      totalPages: Math.ceil(totalItems / limit),
+      itemsPerPage: limit,
+    };
   }
 
   async createBook(bookData: CreateBookDto) {

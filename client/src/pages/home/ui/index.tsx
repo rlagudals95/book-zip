@@ -1,5 +1,6 @@
 import Layout from "@/widgets/layout/ui/Layout";
 import { SubscriptionButton } from "../../../shared/ui/subscription-button/subscription-button";
+import { SERVICE_NAME } from "@/shared/const";
 
 export default function HomePage() {
   return (
@@ -24,7 +25,7 @@ export default function HomePage() {
       {/* 특징 섹션 */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">매일 Book Zip의 특징</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{SERVICE_NAME}의 특징</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             
             <div className="p-6 border rounded-lg shadow-sm bg-card hover:shadow-md transition-shadow">
@@ -58,7 +59,7 @@ export default function HomePage() {
         <div className="container mx-auto text-center px-4">
           <h2 className="text-3xl font-bold mb-6">지금 시작하세요</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            매일 Book Zip과 함께 효율적인 독서 습관을 만들어보세요.
+            {SERVICE_NAME}과 함께 효율적인 독서 습관을 만들어보세요.
             {/* 첫 14일 무료 체험 후 만족하지 못하시면 언제든지 구독을 취소할 수 있습니다. */}
           </p>
           <SubscriptionButton />

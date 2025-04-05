@@ -23,7 +23,9 @@ export class BookGenerationService {
   /**
    * 매일 새벽 1시에 실행되는 책 요약 생성 작업
    */
-  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+
+  //   @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async generateDailyBookSummary() {
     if (this.isProcessing) {
       this.logger.warn('이미 책 요약 생성 작업이 실행 중입니다');
@@ -153,7 +155,7 @@ export class BookGenerationService {
         );
         return await this.fallbackToKoreanBookSearch();
       }
-      console.log(books);
+
       // 3. 책 정보 검증 및 처리
       for (const book of books) {
         const volumeInfo = book.volumeInfo;
@@ -397,18 +399,13 @@ export class BookGenerationService {
   ): Promise<{ content: string; keyPoints: string[] }> {
     try {
       const apiKey = this.configService.get<string>('OPENAI_API_KEY');
-      console.log('apiKey');
-      console.log(apiKey);
+
       if (!apiKey) {
         throw new Error('OpenAI API 키가 설정되지 않았습니다');
       }
 
       const prompt = `
-        다음 책에 대한 상세한 요약본을 작성해주세요:
-        
-        제목: ${book.title}
-        저자: ${book.author}
-        설명: ${book.description || '정보 없음'}
+        책 ${book.title}에 대해서
         
         요약본은 다음내용으로 만들어주세요
         1. 핵심 요약 (2-3 문단)
