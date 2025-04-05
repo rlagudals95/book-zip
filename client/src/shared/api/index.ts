@@ -191,31 +191,3 @@ export const isClient = !isServer;
 
 // 환경에 따라 적절한 API 인스턴스 반환
 export const api = isServer ? serverApi : clientApi;
-
-// 모델 타입들 (예시)
-export interface BookSummary {
-  id: string;
-  title: string;
-  author: string;
-  content: string;
-  keyPoints: string[];
-  readingTime: string;
-  coverImage?: string;
-  summarizedAt: Date;
-  categories?: string[];
-}
-
-// 각 API 엔드포인트별 함수들
-export const summaryApi = {
-  // 특정 요약 가져오기 (서버 컴포넌트용)
-  getSummary: (id: string) => fetchApi.get<BookSummary>(`summaries/${id}`),
-  
-  // 모든 요약 목록 가져오기 (서버 컴포넌트용)
-  getAllSummaries: () => fetchApi.get<BookSummary[]>('summaries'),
-  
-  // 클라이언트 컴포넌트용 함수들
-  client: {
-    getSummary: (id: string) => clientFetch.get<BookSummary>(`summaries/${id}`),
-    getAllSummaries: () => clientFetch.get<BookSummary[]>('summaries'),
-  }
-};

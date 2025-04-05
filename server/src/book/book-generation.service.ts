@@ -23,7 +23,9 @@ export class BookGenerationService {
   /**
    * 매일 새벽 1시에 실행되는 책 요약 생성 작업
    */
-  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+
+  //   @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async generateDailyBookSummary() {
     if (this.isProcessing) {
       this.logger.warn('이미 책 요약 생성 작업이 실행 중입니다');
@@ -153,7 +155,7 @@ export class BookGenerationService {
         );
         return await this.fallbackToKoreanBookSearch();
       }
-      console.log(books);
+
       // 3. 책 정보 검증 및 처리
       for (const book of books) {
         const volumeInfo = book.volumeInfo;
@@ -397,8 +399,7 @@ export class BookGenerationService {
   ): Promise<{ content: string; keyPoints: string[] }> {
     try {
       const apiKey = this.configService.get<string>('OPENAI_API_KEY');
-      console.log('apiKey');
-      console.log(apiKey);
+
       if (!apiKey) {
         throw new Error('OpenAI API 키가 설정되지 않았습니다');
       }

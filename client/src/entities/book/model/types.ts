@@ -1,12 +1,14 @@
-export interface BookSummary {
-  id: string;
+export interface BookDto {
+  _id: string;
   title: string;
   author: string;
-  coverImage: string;
-  date: string;
-  excerpt: string;
-  content: string;
-  categories: string[];
-  readingTime: string;
-  publishedYear: number;
+  summary?: string;
+  keyPoints?: string[];
+  description?: string;
+  coverImage?: string;
+  isSummarized: boolean;
+  categories?: string[];
+  publishedYear?: number;
+  publisher?: string;
+  isbn?: string;
 } 

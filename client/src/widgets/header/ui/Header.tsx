@@ -21,7 +21,7 @@ export const Header = ({  }: HeaderProps) => {
             href="/book" 
             className={ "font-medium text-primary"}
           >
-            Book
+            책목록
           </Link>
           {/* 
           <Link 

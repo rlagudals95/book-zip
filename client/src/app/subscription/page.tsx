@@ -71,9 +71,7 @@ export default function SubscriptionPage() {
 
     setIsLoading(true);
     try {
-      // 여기에 실제 구독 처리 API 요청 코드가 들어갑니다
-      console.log("Selected plan:", selectedPlan);
-      
+
       // 임시로 성공 처리
       setTimeout(() => {
         toast.success("구독이 완료되었습니다!");
