@@ -11,7 +11,9 @@ interface BookPageProps {
 }
 
 export default async function BookPage({ searchParams }: BookPageProps) {
-  const currentPage = Number(searchParams?.page) || 1;
+
+  const page = searchParams?.page ? Number(searchParams.page) : 1;
+  const currentPage = Number(page);
   const itemsPerPage = 10;
   
   try {

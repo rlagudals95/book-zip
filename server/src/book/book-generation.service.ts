@@ -120,13 +120,13 @@ export class BookGenerationService {
       // 한국어 베스트셀러 키워드 목록
       const bestsellerKeywords = [
         'best seller',
-        'best seller 2024',
-        'best seller 2023',
-        'best seller 2022',
-        'best seller 2021',
-        'best seller 2020',
-        'best seller 2019',
-        'best seller 2018',
+        // 'best seller 2024',
+        // 'best seller 2023',
+        // 'best seller 2022',
+        // 'best seller 2021',
+        // 'best seller 2020',
+        // 'best seller 2019',
+        // 'best seller 2018',
       ];
       const randomKeyword =
         bestsellerKeywords[
@@ -415,6 +415,7 @@ export class BookGenerationService {
         책의 중요하거나 핵심이 되는 내용만 쏙쏙 요약해서 책의 인사이트를 짧게 요약해
         책을 다읽지 않아도 책을 다 읽은 것 같은 인사이트를 얻을 수 있도록 해주세요.
         
+        마크업 문법을 사용해서 줄바꿈 자연스럽게 작성해주세요.
         줄바꿈 자연스럽게 작성해주세요.
         약 1,500단어로 작성해주세요.
       `;

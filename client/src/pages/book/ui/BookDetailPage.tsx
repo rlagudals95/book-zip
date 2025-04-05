@@ -20,9 +20,9 @@ export default async function BookDetailPage({ bookId }: BookDetailPageProps) {
 
     return (
       <Layout>
-        <div className="container mx-auto py-8 px-4">
+        <div className="container mx-auto py-8">
           {/* 뒤로가기 버튼 */}
-          <div className="mb-6">
+          <div className="mb-6 px-4">
             <Link
               href="/book"
               className="inline-flex items-center text-blue-600 hover:text-blue-800"
@@ -45,7 +45,7 @@ export default async function BookDetailPage({ bookId }: BookDetailPageProps) {
             </Link>
           </div>
 
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full">
+          <div className="bg-white rounded-lg overflow-hidden w-full">
     
               {/* 책 정보 */}
               <div className="p-6">
