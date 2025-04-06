@@ -27,11 +27,11 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         <h3 className="font-bold text-lg line-clamp-2 mb-1">{book.title}</h3>
         <p className="text-gray-600 text-sm mb-2">{book.author}</p>
         
-        {/* {book.isSummarized && (
+        {book.isSummarized && (
           <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
             요약본 있음
           </span>
-        )} */}
+        )}
       </div>
     </div>
   );
