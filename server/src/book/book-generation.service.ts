@@ -107,16 +107,9 @@ export class BookGenerationService {
    */
   public async fetchAndCreateNewBook(): Promise<BookDocument | null> {
     try {
-      //   const categories: Interest[] = [
-      //     'self-improvement',
-      //     'business',
-      //     'startup',
-      //     'it',
-      //   ];
-
       const books = await getBooksByCrawling();
 
-      this.logger.log(`구글 API 응답 받음: ${books.length}개 항목 발견`);
+      this.logger.log(`${books.length}개 항목 발견`);
 
       if (books.length === 0) {
         return await this.fallbackToKoreanBookSearch();
@@ -524,5 +517,6 @@ async function getBooksByCrawling(): Promise<CreateBookDto[]> {
     publishedYear: book.publishedYear,
     categories: book.categories,
     coverImage: book.coverImage,
+    link: book.link,
   }));
 }

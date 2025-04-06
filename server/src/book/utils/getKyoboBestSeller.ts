@@ -12,6 +12,7 @@ interface KyoboBookData {
   description?: string;
   coverImage?: string;
   categories?: string[];
+  link?: string;
 }
 
 export async function getKyoboBestSellers(): Promise<KyoboBookData[]> {
@@ -41,6 +42,7 @@ export async function getKyoboBestSellers(): Promise<KyoboBookData[]> {
         description: book.prdtDescriptionHead || '',
         coverImage: book.cmdtImgPath || '',
         categories: book.categories || '',
+        link: `https://product.kyobobook.co.kr/detail/${book.saleCmdtid}`,
       };
     });
 
