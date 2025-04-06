@@ -26,8 +26,6 @@ export async function getKyoboBestSellers(): Promise<KyoboBookData[]> {
 
     const response = JSON.parse(stdout);
 
-    console.log(response);
-
     const bestSellers = response.data.bestSeller.slice(0, 20); // 상위 20개만 추출
 
     const books: KyoboBookData[] = bestSellers.map((book: any) => {
