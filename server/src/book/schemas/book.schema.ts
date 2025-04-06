@@ -44,6 +44,15 @@ export class Book {
   @Prop()
   readingTime: string;
 
+  @Prop()
+  link: string;
+
+  @Prop({ default: false })
+  isSent: boolean;
+
+  @Prop({ type: Date })
+  sendAt: Date;
+
   @Prop({ type: Date })
   summarizedAt: Date;
 }

@@ -518,5 +518,7 @@ async function getBooksByCrawling(): Promise<CreateBookDto[]> {
     categories: book.categories,
     coverImage: book.coverImage,
     link: book.link,
+    isSent: false,
+    sendAt: null,
   }));
 }

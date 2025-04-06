@@ -38,7 +38,7 @@ export async function getKyoboBestSellers(): Promise<KyoboBookData[]> {
           : undefined,
         isbn: book.cmdtCode,
         description: book.prdtDescriptionHead || '',
-        coverImage: book.cmdtImgPath || '',
+        coverImage: `https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/${book.cmdtCode}.jpg`,
         categories: book.categories || '',
         link: `https://product.kyobobook.co.kr/detail/${book.saleCmdtid}`,
       };
