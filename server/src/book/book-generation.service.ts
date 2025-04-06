@@ -7,7 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { BookDocument } from './schemas/book.schema';
 import { CreateBookDto } from './schemas/book.dto';
-import { Interest } from 'src/subscriber/types';
+
+import { getKyoboBestSellers } from './utils/getKyoboBestSeller';
 
 @Injectable()
 export class BookGenerationService {
@@ -106,111 +107,35 @@ export class BookGenerationService {
    */
   public async fetchAndCreateNewBook(): Promise<BookDocument | null> {
     try {
-      // 1. 베스트셀러 관련 키워드와 카테고리 선택
-      const categories: Interest[] = [
-        'self-improvement',
-        'business',
-        'startup',
-        'it',
-      ];
-      const randomCategory =
-        categories[Math.floor(Math.random() * categories.length)];
+      //   const categories: Interest[] = [
+      //     'self-improvement',
+      //     'business',
+      //     'startup',
+      //     'it',
+      //   ];
 
-      // 한국어 베스트셀러 키워드 목록
-      const bestsellerKeywords = [
-        'best seller',
-        // 'best seller 2024',
-        // 'best seller 2023',
-        // 'best seller 2022',
-        // 'best seller 2021',
-        // 'best seller 2020',
-        // 'best seller 2019',
-        // 'best seller 2018',
-      ];
-      const randomKeyword =
-        bestsellerKeywords[
-          Math.floor(Math.random() * bestsellerKeywords.length)
-        ];
+      const books = await getBooksByCrawling();
 
-      // 검색어 구성 (카테고리 + 베스트셀러 키워드 + 언어 필터)
-      const query = `subject:${encodeURIComponent(randomCategory)} ${encodeURIComponent(randomKeyword)}`;
+      this.logger.log(`구글 API 응답 받음: ${books.length}개 항목 발견`);
 
-      // 2. Google Books API 호출
-      const apiKey = this.configService.get<string>('GOOGLE_BOOKS_API_KEY');
-      const response = await firstValueFrom(
-        this.httpService.get(
-          `https://www.googleapis.com/books/v1/volumes?q=${query}&langRestrict=ko&maxResults=30&orderBy=relevance&printType=books&key=${apiKey}`,
-        ),
-      );
-
-      this.logger.log(
-        `구글 API 응답 받음: ${response.data.totalItems}개 항목 발견`,
-      );
-
-      const books = response.data.items || [];
       if (books.length === 0) {
-        this.logger.warn(
-          `'${randomCategory}' 카테고리에서 책을 찾을 수 없습니다.`,
-        );
         return await this.fallbackToKoreanBookSearch();
       }
 
-      // 3. 책 정보 검증 및 처리
       for (const book of books) {
-        const volumeInfo = book.volumeInfo;
-
-        // 한국어 책인지 확인
-        if (volumeInfo.language !== 'ko') {
-          continue;
-        }
-
-        // ISBN 확인
-        const isbn = volumeInfo.industryIdentifiers?.find(
-          (id) => id.type === 'ISBN_13' || id.type === 'ISBN_10',
-        )?.identifier;
-
-        // 필수 정보 확인
-        if (!isbn || !volumeInfo.title || !volumeInfo.authors) {
-          continue;
-        }
-
         // 이미 DB에 있는 책인지 확인
-        const existingBook = await this.bookModel.findOne({ isbn }).exec();
+        const existingBook = await this.bookModel
+          .findOne({ isbn: book.isbn })
+          .exec();
         if (existingBook) {
           continue;
         }
 
-        // 4. 책 정보 정리 및 저장
-        const newBookData: CreateBookDto = {
-          title: volumeInfo.title,
-          author: Array.isArray(volumeInfo.authors)
-            ? volumeInfo.authors.join(', ')
-            : volumeInfo.authors,
-          isbn: isbn,
-          description: volumeInfo.description || '',
-          publisher: volumeInfo.publisher || '',
-          publishedYear: volumeInfo.publishedDate
-            ? parseInt(volumeInfo.publishedDate.substring(0, 4))
-            : null,
-          categories: volumeInfo.categories || [randomCategory],
-          coverImage: volumeInfo.imageLinks?.thumbnail || '',
-        };
-
-        // 한글 제목 및 저자 확인 (최소한 하나의 한글 문자 포함)
-        const hasKoreanChar = (text: string) =>
-          /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text);
-        if (
-          !hasKoreanChar(newBookData.title) &&
-          !hasKoreanChar(newBookData.author)
-        ) {
-          continue; // 한글이 전혀 없는 책은 건너뛰기
-        }
-
-        const newBook = new this.bookModel(newBookData);
+        const newBook = new this.bookModel(book);
         await newBook.save();
 
         this.logger.log(
-          `새 책이 DB에 추가되었습니다: ${newBook.title} (ISBN: ${isbn})`,
+          `새 책이 DB에 추가되었습니다: ${newBook.title} (ISBN: ${book.isbn})`,
         );
         return newBook;
       }
@@ -271,6 +196,7 @@ export class BookGenerationService {
       // 무작위로 책 선택
       const randomBook =
         koreanBooks[Math.floor(Math.random() * koreanBooks.length)];
+
       const volumeInfo = randomBook.volumeInfo;
 
       // ISBN 가져오기
@@ -280,6 +206,7 @@ export class BookGenerationService {
 
       // 이미 DB에 있는지 확인
       const existingBook = await this.bookModel.findOne({ isbn }).exec();
+
       if (existingBook) {
         // 다른 책을 재귀적으로 검색
         return await this.fallbackToKoreanBookSearch();
@@ -404,7 +331,13 @@ export class BookGenerationService {
       }
 
       const prompt = `
-        책 ${book.title}에 대해서
+        아래 책의 내용을 요약해주세요.
+        제목: ${book.title}
+        저자: ${book.author}
+        출판사: ${book.publisher}
+        출판년도: ${book.publishedYear}
+        카테고리: ${book.categories.join(', ')}
+        
         
         요약본은 다음내용으로 만들어주세요
         1. 핵심 요약 (2-3 문단)
@@ -577,4 +510,19 @@ export class BookGenerationService {
 
     return newBook;
   }
+}
+
+async function getBooksByCrawling(): Promise<CreateBookDto[]> {
+  const books = await getKyoboBestSellers();
+
+  return books.map((book) => ({
+    title: book.title,
+    author: book.author,
+    isbn: book.isbn,
+    description: book.description,
+    publisher: book.publisher,
+    publishedYear: book.publishedYear,
+    categories: book.categories,
+    coverImage: book.coverImage,
+  }));
 }
