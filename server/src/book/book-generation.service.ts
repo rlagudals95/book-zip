@@ -108,35 +108,45 @@ export class BookGenerationService {
   public async fetchAndCreateNewBook(): Promise<BookDocument | null> {
     try {
       const books = await getBooksByCrawling();
-
       this.logger.log(`${books.length}개 항목 발견`);
 
       if (books.length === 0) {
         return await this.fallbackToKoreanBookSearch();
       }
 
+      const savedBooks: BookDocument[] = [];
+
       for (const book of books) {
         // 이미 DB에 있는 책인지 확인
         const existingBook = await this.bookModel
           .findOne({ isbn: book.isbn })
           .exec();
+
         if (existingBook) {
           continue;
         }
 
         const newBook = new this.bookModel(book);
         await newBook.save();
+        savedBooks.push(newBook);
 
         this.logger.log(
           `새 책이 DB에 추가되었습니다: ${newBook.title} (ISBN: ${book.isbn})`,
         );
-        return newBook;
       }
 
-      this.logger.warn(
-        '적합한 한국어 책을 찾지 못했습니다. 대체 검색을 시도합니다.',
-      );
-      return await this.fallbackToKoreanBookSearch();
+      // 저장된 책이 있으면 첫 번째 책 반환, 없으면 대체 검색
+      if (savedBooks.length > 0) {
+        this.logger.log(
+          `총 ${savedBooks.length}개의 새 책이 DB에 추가되었습니다.`,
+        );
+        return savedBooks[0]; // 여전히 하나만 반환하지만, 여러 책을 저장
+      } else {
+        this.logger.warn(
+          '적합한 한국어 책을 찾지 못했습니다. 대체 검색을 시도합니다.',
+        );
+        return await this.fallbackToKoreanBookSearch();
+      }
     } catch (error) {
       this.logger.error(`새 책 가져오기 실패: ${error.message}`, error.stack);
       return await this.fetchFromPreparedBestSellerList();
@@ -145,6 +155,7 @@ export class BookGenerationService {
 
   /**
    * 직접적인 한국어 도서 검색 시도 (대체 검색)
+   * @deprecated 제거예정
    */
   private async fallbackToKoreanBookSearch(): Promise<BookDocument | null> {
     try {
@@ -231,23 +242,6 @@ export class BookGenerationService {
     } catch (error) {
       this.logger.error(`대체 검색 실패: ${error.message}`);
       return await this.fetchFromPreparedBestSellerList();
-    }
-  }
-
-  /**
-   * 여러 출처에서 새 책을 가져오는 시도 (Google Books API 실패 시 대체 로직)
-   */
-  private async fetchNewBookFromMultipleSources(): Promise<BookDocument | null> {
-    try {
-      // Google Books API 시도
-      const googleBook = await this.fetchAndCreateNewBook();
-      if (googleBook) return googleBook;
-
-      // Google Books API 실패 시 미리 준비된 베스트셀러 목록에서 가져오기
-      return await this.fetchFromPreparedBestSellerList();
-    } catch (error) {
-      this.logger.error(`다중 소스 책 가져오기 실패: ${error.message}`);
-      return null;
     }
   }
 
@@ -374,46 +368,7 @@ export class BookGenerationService {
 
       const content = response.data.choices[0].message.content;
 
-      // 핵심 포인트 추출을 위한 별도 요청
-      const keyPointsResponse = await firstValueFrom(
-        this.httpService.post(
-          'https://api.openai.com/v1/chat/completions',
-          {
-            model: 'gpt-4-turbo',
-            messages: [
-              {
-                role: 'system',
-                content:
-                  '당신은 책 요약 전문가입니다. 책의 핵심 포인트를 간결하게 추출합니다.',
-              },
-              {
-                role: 'user',
-                content: `"${book.title}" 책의 핵심 포인트 5개를 한 문장으로 간결하게 추출해주세요. JSON 형식으로 배열만 응답해주세요.`,
-              },
-            ],
-            temperature: 0.7,
-            max_tokens: 500,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        ),
-      );
-
-      let keyPoints: string[] = [];
-      try {
-        // JSON 형식에서 키 포인트 추출 시도
-        const keyPointsContent =
-          keyPointsResponse.data.choices[0].message.content;
-        const jsonMatch = keyPointsContent.match(/\[[\s\S]*\]/);
-        keyPoints = jsonMatch ? JSON.parse(jsonMatch[0]) : [];
-      } catch (error) {
-        this.logger.warn(`키 포인트 추출 실패: ${error.message}`);
-        keyPoints = [];
-      }
+      const keyPoints = [];
 
       return { content, keyPoints };
     } catch (error) {
