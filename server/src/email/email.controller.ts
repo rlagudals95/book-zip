@@ -65,4 +65,10 @@ export class EmailController {
 
     return { success: true, message: '이메일 인증이 완료되었습니다' };
   }
+
+  @Post('send-summary-email')
+  @HttpCode(HttpStatus.OK)
+  async sendSummaryEmail() {
+    await this.emailService.sendSummaryEmail();
+  }
 }
