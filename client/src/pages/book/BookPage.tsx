@@ -3,6 +3,7 @@ import { getBooks } from "@/entities/book/api/book";
 import BookListSkeleton from '@/entities/book/ui/BookListSkeleton';
 import BookList from '@/entities/book/ui/BookList';
 import Pagination from '@/shared/ui/pagenation/Pagination';
+import { notFound } from 'next/navigation';
 
 interface BookPageProps {
   searchParams?: {
@@ -13,9 +14,14 @@ interface BookPageProps {
 export default async function BookPage({ searchParams }: BookPageProps) {
 
   const page = searchParams?.page ? Number(searchParams.page) : 1;
+
+  if (!page) {
+    return notFound();
+  }
+
   const currentPage = Number(page);
   const itemsPerPage = 10;
-  
+
   try {
    
     const booksData = await getBooks(currentPage, itemsPerPage);

@@ -12,10 +12,15 @@ interface BookDetailPageProps {
 
 export default async function BookDetailPage({ bookId }: BookDetailPageProps) {
   try {
+
+    if (!bookId) {
+      return null;
+    }
+
     const book = await getBook(bookId);
 
     if (!book) {
-      notFound();
+      return notFound();
     }
 
     return (
