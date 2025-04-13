@@ -1,1 +1,0 @@
-export type Interest = 'self-improvement' | 'business' | 'startup' | 'it';
