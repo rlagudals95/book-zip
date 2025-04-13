@@ -311,10 +311,10 @@ export class BookGenerationService {
     book: BookDocument,
   ): Promise<{ content: string; keyPoints: string[] }> {
     try {
-      const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+      const apiKey = this.configService.get<string>('ANTHROPIC_API_KEY');
 
       if (!apiKey) {
-        throw new Error('OpenAI API 키가 설정되지 않았습니다');
+        throw new Error('Anthropic API 키가 설정되지 않았습니다');
       }
 
       const prompt = `
@@ -324,7 +324,6 @@ export class BookGenerationService {
         출판사: ${book.publisher}
         출판년도: ${book.publishedYear}
         카테고리: ${book.categories.join(', ')}
-        
         
         요약본은 다음내용으로 만들어주세요
         1. 핵심 요약 (2-3 문단)
@@ -336,43 +335,41 @@ export class BookGenerationService {
         
         마크업 문법을 사용해서 줄바꿈 자연스럽게 작성해주세요.
         줄바꿈 자연스럽게 작성해주세요.
-        약 1,500단어로 작성해주세요.
+        약 1,500자 정도로 작성해주세요.
       `;
 
       this.logger.log(`prompt: ${prompt}로 요약 생성 시작`);
 
       const response = await firstValueFrom(
         this.httpService.post(
-          'https://api.openai.com/v1/chat/completions',
+          'https://api.anthropic.com/v1/messages',
           {
-            model: 'gpt-4-turbo',
-            messages: [
-              {
-                role: 'system',
-                content:
-                  '당신은 책 요약 전문가입니다. 책의 핵심 내용을 명확하고 간결하게 요약합니다.',
-              },
-              { role: 'user', content: prompt },
-            ],
-            temperature: 0.7,
-            max_tokens: 2000,
+            model: 'claude-3-5-sonnet-20241022',
+            max_tokens: 1024,
+            messages: [{ role: 'user', content: prompt }],
           },
           {
             headers: {
-              Authorization: `Bearer ${apiKey}`,
               'Content-Type': 'application/json',
+              'x-api-key': apiKey,
+              'anthropic-version': '2023-06-01',
             },
           },
         ),
       );
 
-      const content = response.data.choices[0].message.content;
+      // Claude API 응답에서 content 추출
+      const content = response.data.content[0].text;
 
-      const keyPoints = [];
+      // 주요 개념 추출 (마크다운 목록에서 추출)
+      const keyPoints = content
+        .split('\n')
+        .filter((line) => line.startsWith('- ') || line.startsWith('* '))
+        .map((point) => point.replace(/^[- *] /, ''));
 
       return { content, keyPoints };
     } catch (error) {
-      this.logger.error(`OpenAI 요약 생성 오류: ${error.message}`);
+      this.logger.error(`Claude API 요약 생성 오류: ${error.message}`);
       throw new Error(`책 요약 생성 실패: ${error.message}`);
     }
   }
