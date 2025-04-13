@@ -2,7 +2,7 @@ import ky, { Options, BeforeRequestHook, AfterResponseHook } from 'ky';
 import { cache } from 'react';
 
 // 기본 URL 설정 (환경 변수 사용)
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7777';
 
 // 타입 선언
 type ApiOptions = Omit<Options, 'hooks'> & {
